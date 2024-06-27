@@ -2,9 +2,9 @@ CREATE DATABASE library;
 
 USE library;
 
-CREATE TABLE users (
+CREATE TABLE user (
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-name VARCHAR(20),
+name VARCHAR(50) not null,
 email VARCHAR(50) NOT NULL UNIQUE,
 password VARCHAR(250) NOT NULL,
 is_active boolean default false not null,
@@ -13,34 +13,35 @@ created_at datetime default current_timestamp,
 update_at datetime default current_timestamp on update current_timestamp
 );
 
-create table author (
+create table authors (
 id int primary key auto_increment not null,
-name VARCHAR(20),
+name VARCHAR(50),
 nationality varchar(50)
 );
 
 create table books (
 id int primary key auto_increment not null,
+authors_id int,
+foreign key (authors_id) references authors(id),
 title varchar(70) not null,
-description text not null,
-author_id int,
-foreign key (author_id) references author(id)
+description text not null
 );
 
-create table fauvorites (
+create table favourites (
 id int primary key auto_increment not null,
-book_id int,
+books_id int,
+foreign key (books_id) references books(id),
 user_id int,
-foreign key (book_id) references books(id)
+foreign key (user_id) references user(id)
 );
 
 CREATE TABLE loans (
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 books_id INT,
-users_id INT,
+FOREIGN KEY (books_id) REFERENCES books(id),
+user_id INT,
+FOREIGN KEY (user_id) REFERENCES user(id),
 loan_date DATETIME DEFAULT CURRENT_TIMESTAMP,
 return_date DATETIME,
-due_date DATETIME NOT NULL,
-FOREIGN KEY (books_id) REFERENCES books(id),
-FOREIGN KEY (users_id) REFERENCES users(id)
+due_date DATETIME NOT NULL
 );
